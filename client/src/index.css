@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@theme {
+    --color-accent:  #ff6f61;
+    --color-accent-100: #e56357;
+    --color-bgdark: #121212;
+    --color-bglight: #f7f9fa;
+    --color-tdark: #1f2937;
+    --color-tlight: #e5e7eb;
+    --font-display: "Oswald", "sans-serif";     
+}
+
+@keyframes verticalScroll {
+    0% {
+      transform: translateY(0%);
+    }
+    100% {
+      transform: translateY(-50%);
+    }
+  }
+  
+  @keyframes reverseScroll {
+    0% {
+      transform: translateY(-50%);
+    }
+    100% {
+      transform: translateY(0%);
+    }
+  }
+  
+  .animate-verticalScroll {
+    animation: verticalScroll 30s linear infinite;
+  }
+  
+  .animate-reverseScroll {
+    animation: reverseScroll 30s linear infinite;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
+  

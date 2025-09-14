@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 350px;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      background: #f9fafb;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .header h1 {
+      font-size: 18px;
+      margin: 0;
+      color: #1f2937;
+    }
+    
+    .config-section {
+      margin-bottom: 20px;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .config-section label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #374151;
+    }
+    
+    .config-section input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    
+    .button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    
+    .button:hover {
+      background: #2563eb;
+    }
+    
+    .button:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+    
+    .button.secondary {
+      background: #6b7280;
+    }
+    
+    .button.secondary:hover {
+      background: #4b5563;
+    }
+    
+    .button.danger {
+      background: #ef4444;
+    }
+    
+    .button.danger:hover {
+      background: #dc2626;
+    }
+    
+    .button.success {
+      background: #10b981;
+    }
+    
+    .button.success:hover {
+      background: #059669;
+    }
+    
+    .status {
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      text-align: center;
+      margin-top: 10px;
+    }
+    
+    .status.success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    
+    .status.error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    
+    .status.info {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+    
+    .meetings-section {
+      margin-top: 20px;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .meetings-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .meetings-section h3 {
+      font-size: 14px;
+      margin: 0;
+      color: #374151;
+    }
+    
+    .refresh-btn {
+      background: none;
+      border: 1px solid #d1d5db;
+      color: #6b7280;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    
+    .refresh-btn:hover {
+      background: #f3f4f6;
+    }
+    
+    .meeting-item {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .meeting-item:hover {
+      background: #f3f4f6;
+      border-color: #d1d5db;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .meeting-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    
+    .meeting-date {
+      font-weight: 500;
+      color: #374151;
+    }
+    
+    .meeting-status {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    
+    .meeting-status.processed {
+      color: #10b981;
+    }
+    
+    .meeting-status.pending {
+      color: #f59e0b;
+    }
+    
+    .meeting-summary {
+      color: #6b7280;
+      margin-bottom: 8px;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .meeting-stats {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .stat {
+      font-size: 11px;
+      color: #6b7280;
+      background: #f3f4f6;
+      padding: 2px 6px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+    
+    .stat.highlight {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+    
+    .modal {
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background-color: white;
+      margin: 20px;
+      padding: 25px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .modal-header h2 {
+      margin: 0;
+      color: #1f2937;
+      font-size: 20px;
+    }
+    
+    .close {
+      color: #6b7280;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    .close:hover {
+      color: #374151;
+      background: #f3f4f6;
+    }
+    
+    .meeting-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-bottom: 25px;
+      padding: 15px;
+      background: #f9fafb;
+      border-radius: 8px;
+    }
+    
+    .meta-item {
+      text-align: center;
+    }
+    
+    .meta-label {
+      font-size: 12px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    
+    .meta-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+    }
+    
+    .insights {
+      margin-bottom: 25px;
+    }
+    
+    .insights h4 {
+      color: #374151;
+      margin: 20px 0 12px 0;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .insights h4:first-child {
+      margin-top: 0;
+    }
+    
+    .insights-summary {
+      background: #f0f9ff;
+      border-left: 4px solid #3b82f6;
+      padding: 15px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 20px;
+    }
+    
+    .insights-summary p {
+      margin: 0;
+      color: #1e40af;
+      line-height: 1.5;
+    }
+    
+    .insights ul {
+      margin: 0;
+      padding-left: 0;
+      list-style: none;
+    }
+    
+    .insights li {
+      margin-bottom: 8px;
+      padding: 10px;
+      background: #f9fafb;
+      border-radius: 6px;
+      border-left: 3px solid #e5e7eb;
+      transition: all 0.2s ease;
+    }
+    
+    .insights li:hover {
+      border-left-color: #3b82f6;
+      background: #f0f9ff;
+    }
+    
+    .action-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    
+    .action-assignee {
+      font-weight: 600;
+      color: #374151;
+    }
+    
+    .action-task {
+      color: #6b7280;
+      line-height: 1.4;
+    }
+    
+    .action-deadline {
+      font-size: 12px;
+      color: #f59e0b;
+      font-style: italic;
+    }
+    
+    .no-data {
+      color: #9ca3af;
+      font-style: italic;
+      text-align: center;
+      padding: 20px;
+      background: #f9fafb;
+      border-radius: 6px;
+    }
+    
+    .transcription {
+      background: #f9fafb;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #6b7280;
+      max-height: 300px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      border: 1px solid #e5e7eb;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      line-height: 1.4;
+    }
+    
+    .modal-actions {
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .modal-actions .button {
+      flex: 1;
+      min-width: 120px;
+      margin-bottom: 0;
+    }
+    
+    .debug-section {
+      margin-top: 20px;
+      background: #fef3c7;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #f59e0b;
+    }
+    
+    .debug-section h4 {
+      margin-top: 0;
+      color: #92400e;
+    }
+    
+    .debug-section pre {
+      font-size: 10px;
+      overflow-x: auto;
+      background: #fffbeb;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #fbbf24;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .processing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #f59e0b;
+      font-style: italic;
+    }
+    
+    .processing-spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #f59e0b;
+      border-top: 2px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #9ca3af;
+    }
+    
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Meet Transcriber</h1>
+  </div>
+  
+  <div class="config-section">
+    <label for="groq-api-key">Groq API Key:</label>
+    <input type="password" id="groq-api-key" placeholder="Enter your Groq API key">
+    
+    <label for="website-url" style="margin-top: 10px;">Website URL (optional):</label>
+    <input type="text" id="website-url" placeholder="https://yourwebsite.com">
+  </div>
+  
+  <button class="button" id="save-config">Save Configuration</button>
+  <button class="button secondary" id="view-website">View Meeting Dashboard</button>
+  
+  <div id="status-message"></div>
+  
+  <div class="meetings-section">
+    <div class="meetings-header">
+      <h3>Recent Meetings</h3>
+      <button class="refresh-btn" id="refresh-meetings">Refresh</button>
+    </div>
+    <div id="recent-meetings">
+      <div class="meeting-item">
+        <div class="meeting-date">Loading...</div>
+        <div class="meeting-summary">Please wait while we load your meetings</div>
+      </div>
+    </div>
+    
+    <div style="margin-top: 15px; display: flex; gap: 10px;">
+      <button class="button danger" id="clear-storage" style="width: auto; flex: 1; font-size: 12px;">
+        Clear All Data
+      </button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

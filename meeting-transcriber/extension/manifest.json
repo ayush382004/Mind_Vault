@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "Google Meet Transcriber & Insights",
+  "version": "1.0",
+  "description": "Transcribe Google Meet calls and generate insights and todos",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting",
+    "tabCapture"
+  ],
+  "host_permissions": [
+    "https://meet.google.com/*",
+    "https://api.groq.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://meet.google.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Meet Transcriber"
+  },
+  "icons": {
+    "16": "./icons/icon16.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["content.js"],
+      "matches": ["https://meet.google.com/*"]
+    }
+  ]
+}
